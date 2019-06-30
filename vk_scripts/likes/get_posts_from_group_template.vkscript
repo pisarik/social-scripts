@@ -1,0 +1,24 @@
+// loads posts starting from each offset
+// https://vk.com/dev/wall.get
+var owner_id = {owner_id};
+var offsets = {offsets}; // list of offsets
+// one count of posts for all offsets (max 100) https://vk.com/dev/wall.get
+var count = {count};
+var filter = '{filter}'; // owner, others, all (owner+others)
+var version = {version};
+
+var posts = [];
+var i = 0;
+// double curlies, because of python format
+while (i < offsets.length){{
+    var params = {{"owner_id": owner_id,
+                   "offset": offsets[i],
+                   "count": count,
+                   "extended": 0,
+                   "filter": filter,
+                   "v": version}};
+    posts.push(API.wall.get(params));
+    i = i + 1;
+}}
+
+return posts;

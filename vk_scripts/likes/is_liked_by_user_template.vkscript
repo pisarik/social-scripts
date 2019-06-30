@@ -1,0 +1,22 @@
+// loads posts starting from each offset
+// https://vk.com/dev/likes.isLiked
+var user_id = {user_id};
+var owner_id = {owner_id};
+var item_ids = {item_ids};
+var post_types = {post_types};
+var version = {version};
+
+var is_liked = [];
+var i = 0;
+// double curlies, because of python format
+while (i < item_ids.length){{
+    var params = {{"user_id": user_id,
+                   "owner_id": owner_id,
+                   "item_id": item_ids[i],
+                   "type": post_types[i],
+                   "v": version}};
+    is_liked.push(API.likes.isLiked(params));
+    i = i + 1;
+}}
+
+return is_liked;
