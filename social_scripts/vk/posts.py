@@ -47,16 +47,14 @@ def get_batch_requests_for_posts(owner_id, n_posts, start_offset=0,
 
 def get_posts(vkapi, owner_id, n_posts=None, start_offset=0, v=5.95):
     if n_posts is None:
-        n_posts = vkapi.wall.get(owner_id=owner_id, offset=0,
-                                 count=1, v=v)['count']
+        n_posts = vkapi.wall.get(
+            owner_id=owner_id, offset=0, count=1, v=v)['count']
     assert n_posts >= 0, 'n_count must be >= 0'
 
-    vk_scripts = get_batch_requests_for_posts(owner_id, n_posts,
-                                              start_offset=start_offset)
+    vk_scripts = get_batch_requests_for_posts(
+        owner_id, n_posts, start_offset=start_offset)
 
-    all_posts = list(chain.from_iterable(
-        [res['items'] for res in execute_vkscripts(vkapi, vk_scripts,
-                                                   v=v, desc_tqdm='posts')]
-    ))
+    results = execute_vkscripts(vkapi, vk_scripts, v=v, desc_tqdm='posts')
+    all_posts = list(chain.from_iterable([r['items'] for r in results]))
 
     return all_posts[:n_posts]
