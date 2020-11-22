@@ -25,15 +25,13 @@ def execute_vkscripts(
         batch_results = vkapi.execute(code=code, v=v)
 
         if break_condition:
-            cond = True
             for res in batch_results:
-                cond = break_condition(res)
-                if cond:
-                    results.append(res)
-            if not cond:
-                break
+                is_break = break_condition(res)
+                results.append(res)
+                if is_break:
+                    return results
         else:
-            results.extend(results)
+            results.extend(batch_results)
         sleep(sleep_time)
 
     return results

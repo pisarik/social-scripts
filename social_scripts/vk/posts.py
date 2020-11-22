@@ -61,7 +61,7 @@ def get_posts(vkapi, owner_id, n_posts=None, start_offset=0,
             old_length = len(result['items'])
             result['items'] = [item for item in result['items']
                                if datetime.fromtimestamp(item['date']) > after]
-            return old_length != len(results['items'])
+            return old_length != len(result['items'])
     else:
         break_condition = None
 
