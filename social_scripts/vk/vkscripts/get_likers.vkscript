@@ -1,0 +1,25 @@
+// https://vk.com/dev/likes.getList
+var owner_ids = {owner_ids};
+var item_ids = {item_ids};
+var post_types = {post_types};
+var version = {version};
+
+var offsets = {offsets}; // list of offsets
+// one count of posts for all offsets
+var count = {count};
+
+var likers = [];
+var i = 0;
+// double curlies, because of python format
+while (i < item_ids.length){{
+    var params = {{"owner_id": owner_ids[i],
+                   "item_id": item_ids[i],
+                   "type": post_types[i],
+                   "offset": offsets[i],
+                   "count": count,
+                   "v": version}};
+    likers.push(API.likes.getList(params));
+    i = i + 1;
+}}
+
+return likers;
