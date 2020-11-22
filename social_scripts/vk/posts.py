@@ -1,5 +1,6 @@
 import pkgutil
 from itertools import chain
+from datetime import datetime
 
 import numpy as np
 
@@ -45,7 +46,8 @@ def get_batch_requests_for_posts(owner_id, n_posts, start_offset=0,
     return codes
 
 
-def get_posts(vkapi, owner_id, n_posts=None, start_offset=0, v=5.95):
+def get_posts(vkapi, owner_id, n_posts=None, start_offset=0,
+              after: datetime = None, v=5.95):
     if n_posts is None:
         n_posts = vkapi.wall.get(
             owner_id=owner_id, offset=0, count=1, v=v)['count']
@@ -54,7 +56,17 @@ def get_posts(vkapi, owner_id, n_posts=None, start_offset=0, v=5.95):
     vk_scripts = get_batch_requests_for_posts(
         owner_id, n_posts, start_offset=start_offset)
 
-    results = execute_vkscripts(vkapi, vk_scripts, v=v, desc_tqdm='posts')
+    if after is not None:
+        def break_condition(result):
+            old_length = len(result['items'])
+            result['items'] = [item for item in result['items']
+                               if datetime.fromtimestamp(item['date']) > after]
+            return old_length != len(results['items'])
+    else:
+        break_condition = None
+
+    results = execute_vkscripts(vkapi, vk_scripts, v=v, desc_tqdm='posts',
+                                break_condition=break_condition)
     all_posts = list(chain.from_iterable([r['items'] for r in results]))
 
     return all_posts[:n_posts]
